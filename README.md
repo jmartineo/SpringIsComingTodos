@@ -1,5 +1,5 @@
 # Spring Is Coming Todos
-A small project to use Spring Boot consisting of a TODO application with numerous features, using MariaDB as a database.
+A small project using Spring Boot which consists of a TODO application with numerous features, using MariaDB as a database.
 
 ## Current Features
 - [x] Create a new TODO
