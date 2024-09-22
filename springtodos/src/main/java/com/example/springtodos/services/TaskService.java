@@ -17,15 +17,15 @@ public class TaskService {
     }
 
     public List<Task> getAllTasks() {
-        return taskRepository.findAllTasks();
+        return taskRepository.findAll();
     }
 
     public List<Task> getCompleteTasks() {
-        return taskRepository.findCompleteTasks();
+        return taskRepository.findByCompletedTrue();
     }
 
     public List<Task> getIncompleteTasks() {
-        return taskRepository.findIncompleteTasks();
+        return taskRepository.findByCompletedFalse();
     }
 
     public Task getTaskById(long id) {

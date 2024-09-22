@@ -19,7 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // This method is a custom query method that finds a Task by its name
     public Task findTaskByName(String name);
     public Task findTaskById(long id);
-    public List<Task> findCompleteTasks();
-    public List<Task> findIncompleteTasks();
-    public List<Task> findAllTasks();
+    public List<Task> findByCompletedTrue();
+    public List<Task> findByCompletedFalse();
+    public List<Task> findAll();
 }
