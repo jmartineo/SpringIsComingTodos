@@ -1,5 +1,7 @@
 package com.example.springtodos.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.springtodos.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +18,16 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public Page<Task> getAllTasks(Pageable pageable) {
+        return taskRepository.findAll(pageable);
     }
 
-    public List<Task> getCompleteTasks() {
-        return taskRepository.findByCompletedTrue();
+    public Page<Task> getCompleteTasks(Pageable pageable) {
+        return taskRepository.findByCompletedTrue(pageable);
     }
 
-    public List<Task> getIncompleteTasks() {
-        return taskRepository.findByCompletedFalse();
+    public Page<Task> getIncompleteTasks(Pageable pageable) {
+        return taskRepository.findByCompletedFalse(pageable);
     }
 
     public Task getTaskById(long id) {

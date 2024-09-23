@@ -2,6 +2,8 @@ package com.example.springtodos.controllers;
 
 import com.example.springtodos.models.Task;
 import com.example.springtodos.services.TaskService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,21 +20,22 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Task>> getAllTasks() {
-        List<Task> tasks = taskService.getAllTasks();
+    public ResponseEntity<Page<Task>> getAllTasks(@RequestParam int page, @RequestParam int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Task> tasks = taskService.getAllTasks(pageRequest);
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
     @GetMapping("/complete")
-    public ResponseEntity<List<Task>> getCompleteTasks() {
-        List<Task> tasks = taskService.getCompleteTasks();
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    public ResponseEntity<Page<Task>> getCompleteTasks(@RequestParam int page, @RequestParam int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return new ResponseEntity<>(taskService.getCompleteTasks(pageRequest), HttpStatus.OK);
     }
 
     @GetMapping("/incomplete")
-    public ResponseEntity<List<Task>> getIncompleteTasks() {
-        List<Task> tasks = taskService.getIncompleteTasks();
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    public ResponseEntity<Page<Task>> getIncompleteTasks(@RequestParam int page, @RequestParam int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return new ResponseEntity<>(taskService.getIncompleteTasks(pageRequest), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -83,6 +86,4 @@ public class TaskController {
         taskService.deleteTask(task);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
-
-
 }
