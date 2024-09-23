@@ -1,14 +1,12 @@
 package com.example.springtodos.services;
 
+import java.util.Optional;
+import com.example.springtodos.models.Task;
+import com.example.springtodos.repositories.TaskRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.example.springtodos.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.springtodos.models.Task;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskService {

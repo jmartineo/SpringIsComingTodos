@@ -1,14 +1,27 @@
 package com.example.springtodos.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // primary key, which is auto-generated
+    @NotNull
+    @Column(nullable = false, columnDefinition = "text", 
+            length = 150)
+    @Size(min = 1, max = 150, message = "Name must be between 1 and 150 characters")
     private String name;
+    @Column(nullable = false, columnDefinition = "text")
     private String description;
+    @NotNull
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean completed;
 
     public Task() {

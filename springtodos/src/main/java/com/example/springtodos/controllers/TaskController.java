@@ -1,17 +1,22 @@
 package com.example.springtodos.controllers;
 
+import java.util.Optional;
+import java.util.Set;
+
 import com.example.springtodos.models.Task;
 import com.example.springtodos.services.TaskService;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.naming.NameAlreadyBoundException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -60,6 +65,12 @@ public class TaskController {
 
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Task>> violations = validator.validate(task);
+        if (!violations.isEmpty())
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        
         Optional<Task> checkTask = taskService.getTaskByName(task.getName());
 
         if (checkTask.isPresent())
