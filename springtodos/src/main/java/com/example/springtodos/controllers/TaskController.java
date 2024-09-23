@@ -3,7 +3,7 @@ package com.example.springtodos.controllers;
 import java.util.Optional;
 import java.util.Set;
 
-import com.example.springtodos.models.Task;
+import com.example.springtodos.models.tasks.Task;
 import com.example.springtodos.services.TaskService;
 
 import jakarta.validation.ConstraintViolation;
@@ -29,45 +29,45 @@ public class TaskController {
     public ResponseEntity<Page<Task>> getAllTasks(@RequestParam int page, @RequestParam int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return taskService.getAllTasks(pageRequest)
-            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/complete")
     public ResponseEntity<Page<Task>> getCompleteTasks(@RequestParam int page, @RequestParam int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return taskService.getCompleteTasks(pageRequest)
-            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/incomplete")
     public ResponseEntity<Page<Task>> getIncompleteTasks(@RequestParam int page, @RequestParam int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return taskService.getIncompleteTasks(pageRequest)
-            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable long id) {
-       return taskService.getTaskById(id)
-              .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
-              .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+        return taskService.getTaskById(id)
+                .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<Task> getTaskByName(@PathVariable String name) {
         return taskService.getTaskByName(name)
-            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
         if (!validateTask(task))
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        
+
         Optional<Task> checkTask = taskService.getTaskByName(task.getName());
 
         if (checkTask.isPresent())
@@ -85,28 +85,33 @@ public class TaskController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 
         return taskService.getTaskById(id)
-            .map(t -> {
-                if (task.getName() != null) t.setName(task.getName());
-                if (task.getDescription() != null) t.setDescription(task.getDescription());
-                if (task.isCompleted() != t.isCompleted()) t.setCompleted(task.isCompleted());
+                .map(t -> {
+                    if (task.getName() != null)
+                        t.setName(task.getName());
+                    if (task.getDescription() != null)
+                        t.setDescription(task.getDescription());
+                    if (task.isCompleted() != t.isCompleted())
+                        t.setCompleted(task.isCompleted());
 
-                Task updatedTask = taskService.updateTask(t).get();
-                return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-            }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                    Task updatedTask = taskService.updateTask(t).get();
+                    return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+                }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable long id) {
         return taskService.getTaskById(id)
-            .map(t -> {
-                taskService.deleteTask(t);
-                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
-            }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                .map(t -> {
+                    taskService.deleteTask(t);
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+                }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     /*
      * Validate the task object using the Bean Validation API
+     * 
      * @param task the task object to validate
+     * 
      * @return true if the task object is valid, false otherwise
      */
     private boolean validateTask(Task task) {

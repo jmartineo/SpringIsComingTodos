@@ -1,7 +1,6 @@
 package com.example.springtodos.repositories;
 
-import com.example.springtodos.models.Task;
-import org.junit.Before;
+import com.example.springtodos.models.tasks.Task;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
