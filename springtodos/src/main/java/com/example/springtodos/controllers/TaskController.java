@@ -65,10 +65,7 @@ public class TaskController {
 
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<Task>> violations = validator.validate(task);
-        if (!violations.isEmpty())
+        if (!validateTask(task))
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         
         Optional<Task> checkTask = taskService.getTaskByName(task.getName());
@@ -84,6 +81,9 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable long id, @RequestBody Task task) {
+        if (!validateTask(task))
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
         return taskService.getTaskById(id)
             .map(t -> {
                 if (task.getName() != null) t.setName(task.getName());
@@ -102,5 +102,17 @@ public class TaskController {
                 taskService.deleteTask(t);
                 return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
             }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+    }
+
+    /*
+     * Validate the task object using the Bean Validation API
+     * @param task the task object to validate
+     * @return true if the task object is valid, false otherwise
+     */
+    private boolean validateTask(Task task) {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Task>> violations = validator.validate(task);
+        return violations.isEmpty();
     }
 }
