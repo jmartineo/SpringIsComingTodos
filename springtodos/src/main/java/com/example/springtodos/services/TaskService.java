@@ -8,38 +8,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.example.springtodos.models.Task;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public Task createNewTask(Task task) {
-        return taskRepository.save(task);
+    public Optional<Task> createNewTask(Task task) {
+        return Optional.ofNullable(taskRepository.save(task));
     }
 
-    public Page<Task> getAllTasks(Pageable pageable) {
-        return taskRepository.findAll(pageable);
+    public Optional<Page<Task>> getAllTasks(Pageable pageable) {
+        return Optional.ofNullable(taskRepository.findAll(pageable));
     }
 
-    public Page<Task> getCompleteTasks(Pageable pageable) {
-        return taskRepository.findByCompletedTrue(pageable);
+    public Optional<Page<Task>> getCompleteTasks(Pageable pageable) {
+        return Optional.ofNullable(taskRepository.findByCompletedTrue(pageable));
     }
 
-    public Page<Task> getIncompleteTasks(Pageable pageable) {
-        return taskRepository.findByCompletedFalse(pageable);
+    public Optional<Page<Task>> getIncompleteTasks(Pageable pageable) {
+        return Optional.ofNullable(taskRepository.findByCompletedFalse(pageable));
     }
 
-    public Task getTaskById(long id) {
-        return taskRepository.findTaskById(id);
+    public Optional<Task> getTaskById(long id) {
+        return Optional.ofNullable(taskRepository.findTaskById(id));
     }
 
-    public Task getTaskByName(String name) {
-        return taskRepository.findTaskByName(name);
+    public Optional<Task> getTaskByName(String name) {
+        return Optional.ofNullable(taskRepository.findTaskByName(name));
     }
 
-    public Task updateTask(Task task) {
-        return taskRepository.save(task);
+    public Optional<Task> updateTask(Task task) {
+        return Optional.ofNullable(taskRepository.save(task));
     }
 
     public void deleteTask(Task task) {

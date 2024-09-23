@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.naming.NameAlreadyBoundException;
@@ -22,68 +23,73 @@ public class TaskController {
     @GetMapping("/")
     public ResponseEntity<Page<Task>> getAllTasks(@RequestParam int page, @RequestParam int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Task> tasks = taskService.getAllTasks(pageRequest);
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        return taskService.getAllTasks(pageRequest)
+            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/complete")
     public ResponseEntity<Page<Task>> getCompleteTasks(@RequestParam int page, @RequestParam int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return new ResponseEntity<>(taskService.getCompleteTasks(pageRequest), HttpStatus.OK);
+        return taskService.getCompleteTasks(pageRequest)
+            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/incomplete")
     public ResponseEntity<Page<Task>> getIncompleteTasks(@RequestParam int page, @RequestParam int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return new ResponseEntity<>(taskService.getIncompleteTasks(pageRequest), HttpStatus.OK);
+        return taskService.getIncompleteTasks(pageRequest)
+            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable long id) {
-        Task task = taskService.getTaskById(id);
-        return new ResponseEntity<>(task, HttpStatus.OK);
+       return taskService.getTaskById(id)
+              .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+              .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<Task> getTaskByName(@PathVariable String name) {
-        Task task = taskService.getTaskByName(name);
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        return taskService.getTaskByName(name)
+            .map(t -> new ResponseEntity<>(t, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/")
     public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        ResponseEntity<Task> res = getTaskByName(task.getName());
-        Task t = res.getBody();
-        if (t != null)
-            return new ResponseEntity<>(t, HttpStatus.CONFLICT);
-        Task newTask = taskService.createNewTask(task);
-        return new ResponseEntity<>(newTask, HttpStatus.CREATED);
+        Optional<Task> checkTask = taskService.getTaskByName(task.getName());
+
+        if (checkTask.isPresent())
+            return new ResponseEntity<>(checkTask.get(), HttpStatus.CONFLICT);
+        Optional<Task> newTask = taskService.createNewTask(task);
+        if (newTask.isEmpty())
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(newTask.get(), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable long id, @RequestBody Task task) {
-        Task t = taskService.getTaskById(id);
-        if (t == null)
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return taskService.getTaskById(id)
+            .map(t -> {
+                if (task.getName() != null) t.setName(task.getName());
+                if (task.getDescription() != null) t.setDescription(task.getDescription());
+                if (task.isCompleted() != t.isCompleted()) t.setCompleted(task.isCompleted());
 
-        System.out.println("Task: " + task.toString());
-        if (task.getName() != null)
-            t.setName(task.getName());
-        if (task.getDescription() != null)
-            t.setDescription(task.getDescription());
-        if (task.isCompleted() != t.isCompleted())
-            t.setCompleted(task.isCompleted());
-        Task updatedTask = taskService.updateTask(t);
-
-        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+                Task updatedTask = taskService.updateTask(t).get();
+                return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+            }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable long id) {
-        Task task = taskService.getTaskById(id);
-        if (task == null)
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        taskService.deleteTask(task);
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return taskService.getTaskById(id)
+            .map(t -> {
+                taskService.deleteTask(t);
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 }
