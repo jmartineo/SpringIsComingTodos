@@ -8,6 +8,11 @@ A small project using Spring Boot which consists of a TODO application with nume
 - [x] List all TODOs
 - [x] List all TODOs by status (Completed or Incomplete)
 
+## Prerequisites
+* Java 17
+* Maven
+* MariaDB
+
 ## Getting Started
 
 #### 1. Clone the repository:
