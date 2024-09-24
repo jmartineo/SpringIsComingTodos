@@ -1,6 +1,7 @@
-package com.example.springtodos.security;
+package com.example.springtodos.security.roles.models;
 
-import com.example.springtodos.models.users.User;
+import com.example.springtodos.users.models.User;
+import com.example.springtodos.security.privileges.models.Privilege;
 import jakarta.persistence.*;
 
 import java.util.Collection;
@@ -42,6 +43,10 @@ public class Role {
 
     public Collection<User> getUsers() {
         return users;
+    }
+
+    public Collection<Privilege> getPrivileges() {
+        return privileges;
     }
 
     public static class Builder {

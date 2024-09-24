@@ -1,10 +1,10 @@
-package com.example.springtodos.controllers;
+package com.example.springtodos.tasks.controllers;
 
 import java.util.Optional;
 import java.util.Set;
 
-import com.example.springtodos.models.tasks.Task;
-import com.example.springtodos.services.TaskService;
+import com.example.springtodos.tasks.models.Task;
+import com.example.springtodos.tasks.services.TaskService;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

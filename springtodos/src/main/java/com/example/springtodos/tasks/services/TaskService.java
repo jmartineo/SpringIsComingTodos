@@ -1,8 +1,8 @@
-package com.example.springtodos.services;
+package com.example.springtodos.tasks.services;
 
 import java.util.Optional;
-import com.example.springtodos.models.tasks.Task;
-import com.example.springtodos.repositories.TaskRepository;
+import com.example.springtodos.tasks.models.Task;
+import com.example.springtodos.tasks.repositories.TaskRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

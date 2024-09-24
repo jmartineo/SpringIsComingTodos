@@ -1,4 +1,4 @@
-package com.example.springtodos.models.tasks;
+package com.example.springtodos.tasks.models;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;

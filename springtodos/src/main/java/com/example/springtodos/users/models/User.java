@@ -1,10 +1,12 @@
-package com.example.springtodos.models.users;
+package com.example.springtodos.users.models;
 
+import com.example.springtodos.security.roles.models.Role;
 import com.example.springtodos.tasks.models.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -27,6 +29,15 @@ public class User {
     private boolean enabled;
     private boolean tokenExpired;
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
+
     public User() {
         // default constructor
     }
@@ -37,14 +48,16 @@ public class User {
      * @param email
      * @param password
      * @param tasks
+     * @param roles
      */
-    public User(String username, String email, String password, List<Task> tasks) {
+    public User(String username, String email, String password, List<Task> tasks, Collection<Role> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.tasks = tasks;
         this.tokenExpired = true;
         this.enabled = false;
+        this.roles = roles;
 
     }
 
@@ -56,13 +69,32 @@ public class User {
      * @param tasks
      * @param enabled
      * @param tokenExpired
+     * @param roles
      */
-    public User(String username, String email, String password, List<Task> tasks, boolean enabled, boolean tokenExpired) {
+    public User(String username, String email, String password, List<Task> tasks, boolean enabled, boolean tokenExpired, Collection<Role> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.tokenExpired = true;
         this.enabled = false;
+        this.roles = roles;
+    }
+
+    /**
+     * Constructor for creating a new user with a username, email, tasks, enabled, tokenExpired and roles
+     * @param username
+     * @param email
+     * @param tasks
+     * @param enabled
+     * @param tokenExpired
+     * @param roles
+     */
+    public User(String username, String email, List<Task> tasks, boolean enabled, boolean tokenExpired, Collection<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.tokenExpired = true;
+        this.enabled = false;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -93,28 +125,8 @@ public class User {
         return tokenExpired;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void setTokenExpired(boolean tokenExpired) {
-        this.tokenExpired = tokenExpired;
+    public Collection<Role> getRoles() {
+        return roles;
     }
 
     @Override
@@ -138,6 +150,8 @@ public class User {
         private List<Task> tasks;
         private boolean enabled = false;
         private boolean tokenExpired = true;
+        private Collection<Role> roles;
+
 
         public Builder() {
             // default constructor
@@ -173,8 +187,13 @@ public class User {
             return this;
         }
 
+        public Builder roles(Collection<Role> roles) {
+            this.roles = roles;
+            return this;
+        }
+
         public User build() {
-            return new User(username, email, password, tasks, enabled, tokenExpired);
+            return new User(username, email, password, tasks, enabled, tokenExpired, roles);
         }
     }
 }

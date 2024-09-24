@@ -1,6 +1,6 @@
-package com.example.springtodos.repositories;
+package com.example.springtodos.tasks.repositories;
 
-import com.example.springtodos.models.tasks.Task;
+import com.example.springtodos.tasks.models.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
