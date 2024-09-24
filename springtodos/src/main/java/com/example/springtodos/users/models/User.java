@@ -1,6 +1,6 @@
 package com.example.springtodos.models.users;
 
-import com.example.springtodos.models.tasks.Task;
+import com.example.springtodos.tasks.models.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -32,14 +32,14 @@ public class User {
     }
 
     /**
-     * Constructor for creating a new user with a name, email, password, and tasks
-     * @param name
+     * Constructor for creating a new user with a username, email, password, and tasks
+     * @param username
      * @param email
      * @param password
      * @param tasks
      */
-    public User(String name, String email, String password, List<Task> tasks) {
-        this.name = name;
+    public User(String username, String email, String password, List<Task> tasks) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.tasks = tasks;
@@ -49,16 +49,16 @@ public class User {
     }
 
     /**
-     * Constructor for creating a new user with a name, email, password, tasks, enabled, and tokenExpired
-     * @param name
+     * Constructor for creating a new user with a username, email, password, tasks, enabled, and tokenExpired
+     * @param username
      * @param email
      * @param password
      * @param tasks
      * @param enabled
      * @param tokenExpired
      */
-    public User(String name, String email, String password, List<Task> tasks, boolean enabled, boolean tokenExpired) {
-        this.name = name;
+    public User(String username, String email, String password, List<Task> tasks, boolean enabled, boolean tokenExpired) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.tokenExpired = true;
@@ -125,6 +125,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", tasks=" + tasks +
+                ", enabled=" + enabled +
+                ", tokenExpired=" + tokenExpired +
                 '}';
     }
 
