@@ -1,6 +1,11 @@
 package com.example.springtodos.tasks.models;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+import com.example.springtodos.users.models.User;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,15 +28,19 @@ public class Task {
     @NotNull
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean completed;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // Foreign key column
+    private User user;
 
     public Task() {
         // default constructor
     }
 
-    public Task(String name, String description, boolean completed) {
+    public Task(String name, String description, boolean completed, User user) {
         this.name = name;
         this.description = description;
         this.completed = completed;
+        this.user = user;
     }
 
     public Long getId() {
@@ -46,20 +55,12 @@ public class Task {
         return description;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public boolean isCompleted() {
         return completed;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
     }
 
     @Override
@@ -69,6 +70,38 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", completed=" + completed +
+                ", user=" + user +
                 '}';
+    }
+
+    public static class Builder {
+        private String name;
+        private String description;
+        private boolean completed;
+        private User user;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder completed(boolean completed) {
+            this.completed = completed;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Task build() {
+            return new Task(name, description, completed, user);
+        }
     }
 }

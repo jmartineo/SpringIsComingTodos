@@ -139,6 +139,7 @@ public class User {
                 ", tasks=" + tasks +
                 ", enabled=" + enabled +
                 ", tokenExpired=" + tokenExpired +
+                ", roles=" + roles +
                 '}';
     }
 

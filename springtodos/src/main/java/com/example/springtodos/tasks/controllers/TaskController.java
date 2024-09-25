@@ -86,15 +86,17 @@ public class TaskController {
 
         return taskService.getTaskById(id)
                 .map(t -> {
+                    Task.Builder builder = new Task.Builder();
                     if (task.getName() != null)
-                        t.setName(task.getName());
+                        builder.name(task.getName());
                     if (task.getDescription() != null)
-                        t.setDescription(task.getDescription());
-                    if (task.isCompleted() != t.isCompleted())
-                        t.setCompleted(task.isCompleted());
-
-                    Task updatedTask = taskService.updateTask(t).get();
+                        builder.description(task.getDescription());
+                    if (task.isCompleted())
+                        builder.completed(task.isCompleted());
+                    
+                    Task updatedTask = taskService.updateTask(builder.build()).get();
                     return new ResponseEntity<>(updatedTask, HttpStatus.OK);
+
                 }).orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 

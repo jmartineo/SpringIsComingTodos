@@ -13,6 +13,5 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
     public Privilege findPrivilegeByName(String name);
     public Privilege findPrivilegeById(long id);
     public Page<Privilege> findAll(Pageable pageable);
-    public Page<Privilege> findPrivilegesForRole(Role role, Pageable pageable);
-    public Page<Role> findRolesForPrivilege(Privilege privilege, Pageable pageable);
+    public Page<Privilege> findPrivilegesByRoles(Role role, Pageable pageable);
 }

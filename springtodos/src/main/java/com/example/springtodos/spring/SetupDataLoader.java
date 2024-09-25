@@ -46,6 +46,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
              User.Builder builder = new User.Builder();
              admin = builder
                      .username("root")
+                     .email("root@localhost")
                      .password("root")
                      .enabled(true)
                      .tokenExpired(true)

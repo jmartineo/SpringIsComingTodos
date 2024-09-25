@@ -13,6 +13,5 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     public Role findRoleByName(String name);
     public Role findRoleById(long id);
     public Page<Role> findAll(Pageable pageable);
-    public Page<Role> findRolesForUser(User user, Pageable pageable);
-    public Page<User> findUsersForRole(Role role, Pageable pageable);
+    public Page<Role> findRolesByUsers(User user, Pageable pageable);
 }

@@ -1,0 +1,22 @@
+services:
+  springtodos:
+    container_name: springtodos
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - maria_db
+    links:
+      - maria_db:springtodos
+  maria_db:
+    container_name: maria_db
+    image: mariadb:11.5
+    restart: always
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: springtodos
+      MYSQL_USER: neo
+      MYSQL_PASSWORD: neo

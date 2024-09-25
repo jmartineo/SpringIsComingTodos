@@ -3,9 +3,6 @@ package com.example.springtodos.security.privileges.services;
 import com.example.springtodos.security.privileges.models.Privilege;
 import com.example.springtodos.security.privileges.repositories.PrivilegeRepository;
 import com.example.springtodos.security.roles.models.Role;
-import com.example.springtodos.security.roles.repositories.RoleRepository;
-import com.example.springtodos.tasks.models.Task;
-import com.example.springtodos.tasks.repositories.TaskRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,14 +39,7 @@ public class PrivilegeService {
         privilegeRepository.delete(privilege);
     }
 
-    public Optional<Page<Role>> getRolesForPrivilege(Privilege privilege, Pageable pageable) {
-        return Optional.ofNullable(privilegeRepository.findRolesForPrivilege(privilege, pageable));
+    public Optional<Page<Privilege>> getPrivilegesByRole(Role role, Pageable pageable) {
+        return Optional.ofNullable(privilegeRepository.findPrivilegesByRoles(role, pageable));
     }
-
-    public Optional<Page<Privilege>> getPrivilegesForRole(Role role, Pageable pageable) {
-        return Optional.ofNullable(privilegeRepository.findPrivilegesForRole(role, pageable));
-    }
-
-
-
 }

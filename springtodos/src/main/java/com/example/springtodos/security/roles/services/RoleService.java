@@ -32,11 +32,7 @@ public class RoleService {
     }
 
     public Optional<Page<Role>> getRolesForUser(User user, Pageable pageable) {
-        return Optional.ofNullable(roleRepository.findRolesForUser(user, pageable));
-    }
-
-    public Optional<Page<User>> getUsersForRole(Role role, Pageable pageable) {
-        return Optional.ofNullable(roleRepository.findUsersForRole(role, pageable));
+        return Optional.ofNullable(roleRepository.findRolesByUsers(user, pageable));
     }
 
     public Optional<Role> updateRole(Role role) {
